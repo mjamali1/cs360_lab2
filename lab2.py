@@ -1,8 +1,11 @@
 # you can add imports but you should not rely on libraries that are not already provided in "requirements.txt #
 from collections import deque
 from heapq import heappush, heappop
-
 import numpy as np
+
+# for weighted a star, function and self-testing
+import time
+import random 
 
 
 class TextbookStack(object):
@@ -95,7 +98,8 @@ def a_star_search(stack):
     while open_set:
 
         # get node with lowest f value, keeping curr as string and int
-        # line 99 disclaimer - used outside sources for guidance, my original line and subsequent attempts would not compile
+        # line 100 disclaimer - used outside sources for guidance
+        # my original line and subsequent attempts would not compile
         curr = min(open_set, key=lambda stack: f[str(stack)]) 
         curr_key = str(curr)
 
@@ -136,7 +140,7 @@ def a_star_search(stack):
 
             # record path to neighbor
             node_path[neighbor_key] = node_path[curr_key] + [i]
-            
+
     # return least cost path from start to end
     return flip_sequence
 
@@ -147,15 +151,67 @@ def a_star_search(stack):
 
 def weighted_a_star_search(stack, epsilon=None, N=1):
     # Weighted A* is extra credit
+    # choosing option 2 : total running time for each m 
 
+    # new f score = g + epsilon * h
     flip_sequence = []
     # --- v ADD YOUR CODE HERE v --- #
+    for i in range(N):
+        start = time.time()
+
+        open_set = [stack]
+        node_path = {str(stack): []}
+        closed_set = set()
+
+        # f, g, h scores
+        g = {str(stack): 0}
+        h = {str(stack): heuristic(stack)}
+        f = {str(stack): g[str(stack)] + (epsilon * h[str(stack)])}
+
+        # very similar to a star search
+        while open_set:
+            curr = min(open_set, key=lambda stack: f[str(stack)])
+            curr_key = str(curr)
+
+            if curr.check_ordered():
+                flip_sequence = node_path[curr_key]
+                return flip_sequence # solution is found
+            
+            open_set.remove(curr)
+            closed_set.add(curr_key)
+
+            # check neighbors
+            for n in range(1, stack.num_books + 1):
+                neighbor = curr.copy()
+                neighbor.flip_stack(n)
+                neighbor_key = str(neighbor)
+
+                if neighbor_key in closed_set:
+                    continue
+
+                tentative_g = g[str(curr)] + 1
+
+                if neighbor not in open_set:
+                    open_set.append(neighbor)
+                elif tentative_g >= g.get(str(neighbor), float('inf')):
+                    continue
+
+                g[str(neighbor)] = tentative_g
+                h[str(neighbor)] = heuristic(neighbor)
+                f[str(neighbor)] = g[str(neighbor)] + (epsilon * h[str(neighbor)])
+
+                node_path[neighbor_key] = node_path[curr_key] + [n]
+
+        end = time.time()
+        runtime = end - start
+        print(f"Runtime for iteration {i+1}: {runtime} seconds")
+
 
     return flip_sequence
 
     # ---------------------------- #
 
-
+##  GIVEN TEST FOR A STAR SEARCH
 
 if __name__ == "__main__":
     test = TextbookStack(initial_order=[3, 2, 1, 0], initial_orientations=[0, 0, 0, 0])
@@ -167,3 +223,4 @@ if __name__ == "__main__":
 
     print(f"Stack is {'' if stack_ordered else 'not '}ordered")
     print(f"Comparing output to expected traces  - \t{'PASSED' if correct_sequence else 'FAILED'}")
+
