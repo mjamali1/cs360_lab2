@@ -85,17 +85,17 @@ def a_star_search(stack):
     # set of visited nodes
     closed_set = set()
     
-    h=0
+    h0=0
     for i in range(stack.num_books):
         if stack.order[i] != i or stack.orientations[i] != 1:
-            h += 1
+            h0 += 1
     
     # f, g, h scores    
     # f = g+h
     # cost from source node to node
     g = {str(stack): 0}
     # estimated cost from source to goal through node
-    h = {str(stack): h}
+    h = {str(stack): h0}
     # total cost from source to goal node
     f = {str(stack): g[str(stack)] + h[str(stack)]}
 
@@ -119,7 +119,7 @@ def a_star_search(stack):
 
         # explore neighbors
         # for each neighbor of current node
-        for i in range (1, stack.num_books + 1):
+        for i in range (1, curr.num_books + 1):
             neighbor = curr.copy()
             neighbor.flip_stack(i)
             neighbor_key = str(neighbor)
@@ -129,7 +129,7 @@ def a_star_search(stack):
                 continue
 
             # cost from source to neighbor
-            tentative_g = g[str(curr)] + 1
+            tentative_g = g[curr_key] + 1
 
             # if neighbor is not in open set, add it
             if neighbor not in open_set:
@@ -137,11 +137,17 @@ def a_star_search(stack):
             # else if tentative g is greater than g of neighbor, skip
             elif tentative_g >= g.get(str(neighbor), float('inf')):
                 continue
+        
+        # replacement for helper function
+        h_neighbor = 0
+        for j in range(neighbor.num_books):
+            if neighbor.order[j] != j or neighbor.orientations[j] != 1:
+                h_neighbor += 1
 
-        # record f score to neighbor
-        g[str(neighbor)] = tentative_g
-        h[str(neighbor)] = h(neighbor)
-        f[str(neighbor)] = g[str(neighbor)] + h[str(neighbor)]
+        # record f score to neighbor -- str(neigher) or neighbor_key
+        g[neighbor_key] = tentative_g
+        h[neighbor_key] = h_neighbor
+        f[neighbor_key] = g[neighbor_key] + h[neighbor_key]
 
         # record path to neighbor
         node_path[neighbor_key] = node_path[curr_key] + [i]
