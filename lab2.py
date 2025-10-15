@@ -140,8 +140,8 @@ def a_star_search(stack):
         # record path to neighbor
         node_path[neighbor_key] = node_path[curr_key] + [i]
 
-        # return least cost path from start to end
-        return flip_sequence
+    # return least cost path from start to end
+    return flip_sequence
 
     # if no solution found
     return []
