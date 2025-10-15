@@ -83,7 +83,7 @@ def a_star_search(stack):
     # dictionary to track each state to the sequence of flips used to reach it
     node_path = {str(stack): []}
     # set of visited nodes
-    closed_set = set()
+    # closed_set = set()
 
     # f = g+h
     # cost from source node to node
@@ -132,16 +132,16 @@ def a_star_search(stack):
         elif tentative_g >= g.get(str(neighbor), float('inf')):
             continue
 
-    #         # record f score to neighbor
-    #         g[str(neighbor)] = tentative_g
-    #         h[str(neighbor)] = heuristic(neighbor)
-    #         f[str(neighbor)] = g[str(neighbor)] + h[str(neighbor)]
+        # record f score to neighbor
+        g[str(neighbor)] = tentative_g
+        h[str(neighbor)] = heuristic(neighbor)
+        f[str(neighbor)] = g[str(neighbor)] + h[str(neighbor)]
 
-    #         # record path to neighbor
-    #         node_path[neighbor_key] = node_path[curr_key] + [i]
+        # record path to neighbor
+        node_path[neighbor_key] = node_path[curr_key] + [i]
 
-    # # return least cost path from start to end
-    # return flip_sequence
+        # return least cost path from start to end
+        return flip_sequence
 
     # if no solution found
     return []
