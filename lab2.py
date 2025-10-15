@@ -76,14 +76,14 @@ def a_star_search(stack):
 #     # --- v ADD YOUR CODE HERE v --- #
     
     # initialize
-    # stack is the initial state
+    # stack is the initial gistate
     open_set = [stack]
     # flip sequence is the list of flips to get to the goal state
     flip_sequence = []
     # dictionary to track each state to the sequence of flips used to reach it
     node_path = {str(stack): []}
     # set of visited nodes
-    # closed_set = set()
+    closed_set = set()
 
     # f = g+h
     # cost from source node to node
