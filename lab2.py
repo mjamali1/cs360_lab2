@@ -60,14 +60,14 @@ def apply_sequence(stack, sequence):
 
 # helper function for a star search
 # admissiable heuristic - number of books not in place or not facing front
-def heuristic(stack):
+# def heuristic(stack):
     
-    h=0
-    for i in range(stack.num_books):
-        if stack.order[i] != i or stack.orientations[i] != 1:
-            h += 1
+#     h=0
+#     for i in range(stack.num_books):
+#         if stack.order[i] != i or stack.orientations[i] != 1:
+#             h += 1
     
-    return h
+#     return h
 
 
 
@@ -84,12 +84,18 @@ def a_star_search(stack):
     node_path = {str(stack): []}
     # set of visited nodes
     closed_set = set()
-
+    
+    h=0
+    for i in range(stack.num_books):
+        if stack.order[i] != i or stack.orientations[i] != 1:
+            h += 1
+    
+    # f, g, h scores    
     # f = g+h
     # cost from source node to node
     g = {str(stack): 0}
     # estimated cost from source to goal through node
-    h = {str(stack): heuristic(stack)}
+    h = {str(stack): h}
     # total cost from source to goal node
     f = {str(stack): g[str(stack)] + h[str(stack)]}
 
@@ -134,7 +140,7 @@ def a_star_search(stack):
 
         # record f score to neighbor
         g[str(neighbor)] = tentative_g
-        h[str(neighbor)] = heuristic(neighbor)
+        h[str(neighbor)] = h(neighbor)
         f[str(neighbor)] = g[str(neighbor)] + h[str(neighbor)]
 
         # record path to neighbor
