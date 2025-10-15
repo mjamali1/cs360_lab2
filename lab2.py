@@ -118,19 +118,19 @@ def a_star_search(stack):
             neighbor.flip_stack(i)
             neighbor_key = str(neighbor)
 
-        # if neighbor is in closed list, skip
-        if neighbor_key in closed_set:
-            continue
+            # if neighbor is in closed list, skip
+            if neighbor_key in closed_set:
+                continue
 
-        # cost from source to neighbor
-        tentative_g = g[str(curr)] + 1
+            # cost from source to neighbor
+            tentative_g = g[str(curr)] + 1
 
-        # if neighbor is not in open set, add it
-        if neighbor not in open_set:
-            open_set.append(neighbor)
+            # if neighbor is not in open set, add it
+            if neighbor not in open_set:
+                open_set.append(neighbor)
             # else if tentative g is greater than g of neighbor, skip
-        elif tentative_g >= g.get(str(neighbor), float('inf')):
-            continue
+            elif tentative_g >= g.get(str(neighbor), float('inf')):
+                continue
 
         # record f score to neighbor
         g[str(neighbor)] = tentative_g
