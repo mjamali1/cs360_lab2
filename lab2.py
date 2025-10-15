@@ -69,14 +69,14 @@ def apply_sequence(stack, sequence):
     
 #     return h
 
-
-
 def a_star_search(stack):
     
 #     # --- v ADD YOUR CODE HERE v --- #
     
     # initialize
     # stack is the initial gistate
+    start_key = str(stack)
+    # open set is the list of nodes to explore
     open_set = [stack]
     # flip sequence is the list of flips to get to the goal state
     flip_sequence = []
@@ -108,6 +108,18 @@ def a_star_search(stack):
         curr = min(open_set, key=lambda s: f.get(str(s), float('inf')))
         curr_key = str(curr)
 
+        if curr_key not in node_path:
+            node_path[curr_key] = []  # at worst, treat as start
+        if curr_key not in g:
+            g[curr_key] = len(node_path[curr_key])
+            # inline heuristic for curr (no helper)
+            h_curr = 0
+            for j in range(curr.num_books):
+                if curr.order[j] != j or curr.orientations[j] != 1:
+                    h_curr += 1
+            h[curr_key] = h_curr
+            f[curr_key] = g[curr_key] + h[curr_key]
+
         # if current node is goal state, return flip sequence
         if curr.check_ordered():
             flip_sequence = node_path[curr_key]
@@ -127,9 +139,21 @@ def a_star_search(stack):
             # if neighbor is in closed list, skip
             if neighbor_key in closed_set:
                 continue
-
+            
             # cost from source to neighbor
             tentative_g = g[curr_key] + 1
+
+            node_path[neighbor_key] = node_path[curr_key] + [i]
+
+            # inline heuristic
+            h_neighbor = 0
+            for j in range(neighbor.num_books):
+                if neighbor.order[j] != j or neighbor.orientations[j] != 1:
+                    h_neighbor += 1
+
+            g[neighbor_key] = g[curr_key] + 1
+            h[neighbor_key] = h_neighbor
+            f[neighbor_key] = g[neighbor_key] + h[neighbor_key]
 
             # if neighbor is not in open set, add it
             if neighbor not in open_set:
@@ -145,12 +169,12 @@ def a_star_search(stack):
                 h_neighbor += 1
 
         # record f score to neighbor -- str(neigher) or neighbor_key
-        g[neighbor_key] = tentative_g
-        h[neighbor_key] = h_neighbor
-        f[neighbor_key] = g[neighbor_key] + h[neighbor_key]
+        # g[neighbor_key] = tentative_g
+        # h[neighbor_key] = h_neighbor
+        # f[neighbor_key] = g[neighbor_key] + h[neighbor_key]
 
-        # record path to neighbor
-        node_path[neighbor_key] = node_path[curr_key] + [i]
+        # # record path to neighbor
+        # node_path[neighbor_key] = node_path[curr_key] + [i]
 
     # return least cost path from start to end
     # return flip_sequence
@@ -164,58 +188,7 @@ def weighted_a_star_search(stack, epsilon=None, N=1):
     # Weighted A* is extra credit
     # choosing option 2 : total running time for each m 
 
-    # new f score = g + epsilon * h
-    flip_sequence = []
-    # # --- v ADD YOUR CODE HERE v --- #
-    # for i in range(N):
-    #     start = time.time()
-
-    #     open_set = [stack]
-    #     node_path = {str(stack): []}
-    #     closed_set = set()
-
-    #     # f, g, h scores
-    #     g = {str(stack): 0}
-    #     h = {str(stack): heuristic(stack)}
-    #     f = {str(stack): g[str(stack)] + (epsilon * h[str(stack)])}
-
-    #     # very similar to a star search
-    #     while open_set:
-    #         curr = min(open_set, key=lambda stack: f[str(stack)])
-    #         curr_key = str(curr)
-
-    #         if curr.check_ordered():
-    #             flip_sequence = node_path[curr_key]
-    #             return flip_sequence # solution is found
-            
-    #         open_set.remove(curr)
-    #         closed_set.add(curr_key)
-
-    #         # check neighbors
-    #         for n in range(1, stack.num_books + 1):
-    #             neighbor = curr.copy()
-    #             neighbor.flip_stack(n)
-    #             neighbor_key = str(neighbor)
-
-    #             if neighbor_key in closed_set:
-    #                 continue
-
-    #             tentative_g = g[str(curr)] + 1
-
-    #             if neighbor not in open_set:
-    #                 open_set.append(neighbor)
-    #             elif tentative_g >= g.get(str(neighbor), float('inf')):
-    #                 continue
-
-    #             g[str(neighbor)] = tentative_g
-    #             h[str(neighbor)] = heuristic(neighbor)
-    #             f[str(neighbor)] = g[str(neighbor)] + (epsilon * h[str(neighbor)])
-
-    #             node_path[neighbor_key] = node_path[curr_key] + [n]
-
-    #     end = time.time()
-    #     runtime = end - start
-    #     print(f"Runtime for iteration {i+1}: {runtime} seconds")
+    # --- v ADD YOUR CODE HERE v --- #
 
 
     return flip_sequence
@@ -234,4 +207,5 @@ if __name__ == "__main__":
 
     print(f"Stack is {'' if stack_ordered else 'not '}ordered")
     print(f"Comparing output to expected traces  - \t{'PASSED' if correct_sequence else 'FAILED'}")
-
+   
+    
