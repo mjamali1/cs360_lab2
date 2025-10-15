@@ -105,7 +105,7 @@ def a_star_search(stack):
         # get node with lowest f value, keeping curr as string and int
         # line 100 disclaimer - used outside sources for guidance
         # my original line and subsequent attempts would not compile
-        curr = min(open_set, key=lambda stack: f[str(stack)]) 
+        curr = min(open_set, key=lambda s: f.get(str(s), float('inf')))
         curr_key = str(curr)
 
         # if current node is goal state, return flip sequence
