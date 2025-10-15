@@ -71,82 +71,81 @@ def heuristic(stack):
 
 
 
-def a_star_search(stack):
+# def a_star_search(stack):
     
-
-    # --- v ADD YOUR CODE HERE v --- #
+#     # --- v ADD YOUR CODE HERE v --- #
     
     # initialize
     # stack is the initial state
-    open_set = [stack]
+    #  open_set = [stack]
     # flip sequence is the list of flips to get to the goal state
     flip_sequence = []
     # dictionary to track each state to the sequence of flips used to reach it
-    node_path = {str(stack): []}
-    # set of visited nodes
-    closed_set = set()
+    # node_path = {str(stack): []}
+    # # set of visited nodes
+    # closed_set = set()
 
-    # f = g+h
-    # cost from source node to node
-    g = {str(stack): 0}
-    # estimated cost from source to goal through node
-    h = {str(stack): heuristic(stack)}
-    # total cost from source to goal node
-    f = {str(stack): g[str(stack)] + h[str(stack)]}
+    # # f = g+h
+    # # cost from source node to node
+    # g = {str(stack): 0}
+    # # estimated cost from source to goal through node
+    # h = {str(stack): heuristic(stack)}
+    # # total cost from source to goal node
+    # f = {str(stack): g[str(stack)] + h[str(stack)]}
 
-    # while there are nodes to explore
-    while open_set:
+    # # while there are nodes to explore
+    # while open_set:
 
         # get node with lowest f value, keeping curr as string and int
         # line 100 disclaimer - used outside sources for guidance
         # my original line and subsequent attempts would not compile
-        curr = min(open_set, key=lambda stack: f[str(stack)]) 
-        curr_key = str(curr)
+    #     curr = min(open_set, key=lambda stack: f[str(stack)]) 
+    #     curr_key = str(curr)
 
-        # if current node is goal state, return flip sequence
-        if curr.check_ordered():
-            flip_sequence = node_path[curr_key]
-            return flip_sequence
+    #     # if current node is goal state, return flip sequence
+    #     if curr.check_ordered():
+    #         flip_sequence = node_path[curr_key]
+    #         return flip_sequence
         
-        # mark node as visitied
-        open_set.remove(curr)
-        closed_set.add(curr_key)
+    #     # mark node as visitied
+    #     open_set.remove(curr)
+    #     closed_set.add(curr_key)
 
-        # explore neighbors
-        # for each neighbor of current node
-        for i in range (1, stack.num_books + 1):
-            neighbor = curr.copy()
-            neighbor.flip_stack(i)
-            neighbor_key = str(neighbor)
+    #     # explore neighbors
+    #     # for each neighbor of current node
+    #     for i in range (1, stack.num_books + 1):
+    #         neighbor = curr.copy()
+    #         neighbor.flip_stack(i)
+    #         neighbor_key = str(neighbor)
 
-            # if neighbor is in closed list, skip
-            if neighbor_key in closed_set:
-                continue
+    #         # if neighbor is in closed list, skip
+    #         if neighbor_key in closed_set:
+    #             continue
 
-            # cost from source to neighbor
-            tentative_g = g[str(curr)] + 1
+    #         # cost from source to neighbor
+    #         tentative_g = g[str(curr)] + 1
 
-            # if neighbor is not in open set, add it
-            if neighbor not in open_set:
-                open_set.append(neighbor)
-            # else if tentative g is greater than g of neighbor, skip
-            elif tentative_g >= g.get(str(neighbor), float('inf')):
-                continue
+    #         # if neighbor is not in open set, add it
+    #         if neighbor not in open_set:
+    #             open_set.append(neighbor)
+    #         # else if tentative g is greater than g of neighbor, skip
+    #         elif tentative_g >= g.get(str(neighbor), float('inf')):
+    #             continue
 
-            # record f score to neighbor
-            g[str(neighbor)] = tentative_g
-            h[str(neighbor)] = heuristic(neighbor)
-            f[str(neighbor)] = g[str(neighbor)] + h[str(neighbor)]
+    #         # record f score to neighbor
+    #         g[str(neighbor)] = tentative_g
+    #         h[str(neighbor)] = heuristic(neighbor)
+    #         f[str(neighbor)] = g[str(neighbor)] + h[str(neighbor)]
 
-            # record path to neighbor
-            node_path[neighbor_key] = node_path[curr_key] + [i]
+    #         # record path to neighbor
+    #         node_path[neighbor_key] = node_path[curr_key] + [i]
 
-    # return least cost path from start to end
-    return flip_sequence
+    # # return least cost path from start to end
+    # return flip_sequence
 
     # if no solution found
     return []
-    # ---------------------------- #
+#     # ---------------------------- #
 
 
 def weighted_a_star_search(stack, epsilon=None, N=1):
